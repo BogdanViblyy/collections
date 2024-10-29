@@ -11,7 +11,7 @@ namespace collections
         public static void Execute()
         {
             List<Product> products = new List<Product>
-        {
+            {
             new Product { Name = "porgand", Calories = 41 },
             new Product { Name = "leib", Calories = 271 },
             new Product { Name = "kartul", Calories = 77 },
@@ -20,44 +20,138 @@ namespace collections
             new Product { Name = "brokoli", Calories = 34 },
             new Product { Name = "riis", Calories = 130 },
             new Product { Name = "piim", Calories = 42 }
-        };
-
-            var dailyPlan = new List<(Product Product, double Amount)>
-        {
-            (products[4], 200),
-            (products[3], 150),
-            (products[0], 100),
-            (products[6], 100),
-            (products[5], 100),
-            (products[7], 250),
-            (products[1], 150)
-        };
+            };
+            double weight = 0;
+            double height = 0;
+            int age = 0;
+            string gender = "";
+            string activity = "";
+            List<string> activityLevels = new List<string>
+            {
+            "Istuv eluviis",
+            "Vähene aktiivsus",
+            "Mõõdukas aktiivsus",
+            "Kõrge aktiivsus",
+            "Väga kõrge aktiivsus"
+            };
 
             Console.WriteLine("Sisestage oma andmeid ");
             Console.WriteLine("Kaal:");
-            double weight = double.Parse(Console.ReadLine());
+            while (true)
+            {
+                try
+                {
+                    weight = double.Parse(Console.ReadLine());
+                    break;
+                }
+                catch (FormatException)
+                {
+
+                    Console.WriteLine("Vale format.");
+                }
+            }
+
             Console.WriteLine("Pikkus:");
-            double height = double.Parse(Console.ReadLine());
+            while (true)
+            { 
+                try
+                {
+                    height = double.Parse(Console.ReadLine());
+                    break;
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("Vale format.");
+                }
+            }
+            
             Console.WriteLine("Vanus:");
-            int age = int.Parse(Console.ReadLine());
+            while (true)
+            {
+                try
+                {
+                    age = int.Parse(Console.ReadLine());
+                    break;
+                }
+                catch (FormatException)
+                {
+
+                    Console.WriteLine("Vale format.");
+                }
+            }
             Console.WriteLine("Sugu(mees/naine):");
-            string gender = Console.ReadLine();
+            while (true)
+            {
+                try
+                {
+                    gender = Console.ReadLine().ToLower();
+                    if (gender == "mees" || gender == "naine")
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Palun sisestage 'mees' või 'naine'.");
+                    }
+                }
+
+                catch (FormatException)
+                {
+                    Console.WriteLine("Vale format.");
+                }
+            }
+
+          
+            
             Console.WriteLine("Aktiivsus (Istuv eluviis/Vähene aktiivsus/Mõõdukas aktiivsus/Kõrge aktiivsus/Väga kõrge aktiivsus):");
-            string activity = Console.ReadLine();
+            while (true)
+            {
+                try
+                {
+                    activity = Console.ReadLine();
+                    if (activityLevels.Contains(activity))
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Valesti kirjutatud.");
+                    }
+
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("Vale format.");
+                }
+            }
+            
 
             Human user = new Human { Weight = weight, Height = height, Age = age, Gender = gender, Activity = activity };
             double dailyCalories = CalculateBMR(user.Weight, user.Height, user.Age, user.Gender, user.Activity);
 
             Console.WriteLine($"Teie BMR on: {dailyCalories} kalorit");
-            Console.WriteLine("Te saate tarbida järgmisi tooteid:");
+            Console.WriteLine("Valige millise toode diet te tahate näha?\n");
+            foreach (Product product in products)
+        {
+            Console.WriteLine(product.Name);
+        }
 
-            double totalCalories = 0;
-            foreach (var item in dailyPlan)
-            {
-                double productCalories = (item.Product.Calories * item.Amount) / 100;
-                totalCalories += productCalories;
-                Console.WriteLine($"{item.Product.Name}: {item.Amount} grammi, {productCalories} kalorit");
-            }
+        string dietChoice = Console.ReadLine();
+        Product dietProduct = products.FirstOrDefault(p => p.Name.Equals(dietChoice, StringComparison.OrdinalIgnoreCase));
+
+        if (dietProduct != null)
+        {
+            int dailyPlan = (int)(dailyCalories / dietProduct.Calories);
+            Console.WriteLine($"Saate süüa {dietProduct.Name} {dailyPlan} korda.");
+        }
+        else
+        {
+            Console.WriteLine("Valitud toodet ei leitud.");
+        }
+
+
+
+            
         }
 
         private static double CalculateBMR(double weight, double height, int age, string gender, string activity)

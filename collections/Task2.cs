@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace collections
 {
@@ -10,10 +11,32 @@ namespace collections
     {
         public static void Execute()
         {
+            int listLenght = 0;
+            Console.WriteLine("Sisestage listi pikkus");
+            string listLenghtString = Console.ReadLine();
+
             Random random = new Random();
             List<int> randomNumbers = new List<int>();
 
-            for (int i = 0; i < 20; i++)
+
+            try
+            {
+                listLenght = int.Parse(listLenghtString);
+                if (listLenght > 0)
+                {
+                    Console.WriteLine($"Te sisestasite: {listLenght}");
+
+                }
+                else
+                {
+                    Console.WriteLine("Number peab olema suurem kui null. Palun proovige uuesti.");
+                }
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Vale sisend. Palun sisestage kehtiv täisarv.");
+            }
+             for (int i = 0; i < listLenght; i++)
             {
                 randomNumbers.Add(random.Next(0, 101));
             }

@@ -17,30 +17,48 @@ namespace collections
             string numbers = Console.ReadLine();
 
             List<int> list = new List<int>();
-            string[] numberStrings = numbers.Split(' ');
 
-            foreach (string numberString in numberStrings)
+            foreach (char sym in numbers)
             {
-                if (int.TryParse(numberString, out int num))
+                if (char.IsDigit(sym))
                 {
-                    list.Add(num);
+                    try
+                    {
+                       
+                        int num = int.Parse(sym.ToString());
+                        list.Add(num);
+                    }
+                    catch (FormatException)
+                    {
+                        Console.WriteLine($"'{sym}' ei ole kehtiv number. Palun proovige uuesti.");
+                        return;
+                    }
+                    catch (OverflowException)
+                    {
+                        Console.WriteLine($"'{sym}' ületab int tüübi piire. Palun proovige uuesti.");
+                        return;
+                    }
                 }
-                else
+                else if (!char.IsWhiteSpace(sym))
                 {
-                    Console.WriteLine($"'{numberString}' ei ole kehtiv number. Palun proovige uuesti.");
-                    return; 
+                
+                    Console.WriteLine($"'{sym}' ei ole kehtiv sisend. Palun sisestage ainult numbrid.");
+                    return;
                 }
             }
 
             if (list.Count == 1)
             {
                 Console.WriteLine(list[0]);
+                Console.ReadLine();
             }
             else
             {
-                for (int index = 0; index < list.Count; index++)
+                foreach (int num in list)
                 {
+                    int index = list.IndexOf(num);
                     int numbSum;
+
                     if (index != 0 && index != list.Count - 1)
                     {
                         numbSum = list[index - 1] + list[index + 1];
@@ -53,11 +71,14 @@ namespace collections
                     {
                         numbSum = list[index - 1] + list[0];
                     }
+
                     Console.WriteLine(numbSum);
                 }
+                Console.ReadLine();
             }
         }
     }
+
 
 
 
